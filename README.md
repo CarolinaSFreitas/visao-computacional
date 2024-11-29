@@ -48,3 +48,8 @@ opencv-python==4.10.0.84
 
 # 🚀 Rodar o Script
 ``python cat_vision.py``
+
+## Desativação do Ambiente Virtual
+```bash
+deactivate
+```
