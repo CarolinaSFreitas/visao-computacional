@@ -2,16 +2,7 @@ import cv2
 import tensorflow as tf
 import time
 
-# Verifica se há GPUs disponíveis e configura o TensorFlow para usar a GPU
-physical_devices = tf.config.list_physical_devices('GPU')
-if len(physical_devices) > 0:
-    print("GPU encontrada:", physical_devices)
-    # Configura o TensorFlow para usar a primeira GPU
-    tf.config.set_visible_devices(physical_devices[0], 'GPU')
-    # Limita a alocação de memória (crescente)
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
-else:
-    print("Nenhuma GPU encontrada, usando a CPU.")
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
 # Carregar o modelo salvo
 model = tf.saved_model.load(r'C:\visao-computacional\visao-computacional\visao-trab')
