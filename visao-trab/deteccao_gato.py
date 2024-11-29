@@ -1,8 +1,19 @@
 import cv2
 import tensorflow as tf
+import time
 
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+# Verifica se há GPUs disponíveis e configura o TensorFlow para usar a GPU
+physical_devices = tf.config.list_physical_devices('GPU')
+if len(physical_devices) > 0:
+    print("GPU encontrada:", physical_devices)
+    # Configura o TensorFlow para usar a primeira GPU
+    tf.config.set_visible_devices(physical_devices[0], 'GPU')
+    # Limita a alocação de memória (crescente)
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+else:
+    print("Nenhuma GPU encontrada, usando a CPU.")
 
+# Carregar o modelo salvo
 model = tf.saved_model.load(r'C:\visao-computacional\visao-computacional\visao-trab')
 
 LABEL_MAP = {
@@ -28,26 +39,39 @@ LABEL_MAP = {
 
 def run_inference_for_video(model, video_path):
     cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)  # Pega o FPS original do vídeo
+    print(f"FPS original do vídeo: {fps}")
+
+    # Verifique se o vídeo foi aberto corretamente
+    if not cap.isOpened():
+        print("Erro ao abrir o vídeo.")
+        return
+
+    # Controle de tempo para ajuste de FPS
+    prev_time = time.time()
 
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
-        frame_resized = cv2.resize(frame, (320, 150))  
-
+        # Redimensiona o quadro para reduzir a carga do modelo
+        frame_resized = cv2.resize(frame, (320, 150))
         frame_resized = frame_resized.astype('uint8')
 
+        # Converte o quadro para tensor
         input_tensor = tf.convert_to_tensor(frame_resized)
-
         input_tensor = input_tensor[tf.newaxis, ...]
 
+        # Realiza a inferência
         output_dict = model(input_tensor)
 
+        # Extração das caixas de detecção e outras informações
         detection_boxes = output_dict['detection_boxes']
         detection_classes = output_dict['detection_classes']
         detection_scores = output_dict['detection_scores']
 
+        # Desenha as caixas e rótulos
         for i in range(detection_boxes.shape[1]):
             if detection_scores[0, i] > 0.5:
                 ymin, xmin, ymax, xmax = detection_boxes[0, i].numpy()
@@ -62,14 +86,21 @@ def run_inference_for_video(model, video_path):
                 cv2.putText(frame, f"{class_name} ({score:.2f})", (int(left), int(top)-10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
+        # Exibe o quadro com detecção
         cv2.imshow('Detecção de Objetos', frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        # Controle de FPS (aguarda o tempo restante para manter o FPS original)
+        elapsed_time = time.time() - prev_time
+        time_to_wait = max(1, int(1000 / fps - elapsed_time * 1000))  # Tempo em ms
+        if cv2.waitKey(time_to_wait) & 0xFF == ord('q'):
             break
+
+        prev_time = time.time()
 
     cap.release()
     cv2.destroyAllWindows()
 
-video_path = r'C:\visao-computacional\visao-computacional\visao-trab\gato.mp4'
+# Caminho do vídeo
+video_path = r'C:\visao-computacional\visao-computacional\visao-trab\gatos.mp4'
 
 run_inference_for_video(model, video_path)
