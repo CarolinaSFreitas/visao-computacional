@@ -4,7 +4,7 @@ import time
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
-model = tf.saved_model.load(r'C:\visao-computacional\visao-computacional\visao-trab')
+model = tf.saved_model.load(r'C:\visao-computacional\cat_vision')
 
 LABEL_MAP = {
     1: 'pessoa',
@@ -81,6 +81,6 @@ def run_inference_for_video(model, video_path):
     cap.release()
     cv2.destroyAllWindows()
 
-video_path = r'C:\visao-computacional\visao-computacional\visao-trab\gatos.mp4'
+video_path = r'C:\visao-computacional\cat_vision\gatos.mp4'
 
 run_inference_for_video(model, video_path)
