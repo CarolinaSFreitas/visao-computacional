@@ -1,11 +1,11 @@
+<img align="right" src="image.png" width="380">
+  
 # 🐱 Projeto CatVision  
 Projeto criado para a disciplina **Fundamentos de Inteligência Artificial (FIA)** - Graduação. **Professor:** Pablo De Chiaro
 
 **Este projeto utiliza Visão Computacional para detectar gatos, configurando um ambiente Python com as bibliotecas necessárias para processar e analisar imagens.**
 
 **O CatVision utiliza o OpenCV para processamento de imagens e TensorFlow para inferência. Ele implementa uma detecção baseada em características de gatos, demonstrando conceitos de Visão Computacional aplicados a um cenário real.**
-
-![CatVision](image.png)
 
 ## 👩‍🎓 **Discentes:**  
 - Carolina Freitas  
