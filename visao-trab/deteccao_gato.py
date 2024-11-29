@@ -29,59 +29,47 @@ LABEL_MAP = {
 def run_inference_for_video(model, video_path):
     cap = cv2.VideoCapture(video_path)
 
-    
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
-    out = cv2.VideoWriter('output_video.mp4', fourcc, 20.0, (320, 180))  
-
-    frame_counter = 0
-    frame_skip = 2  
-
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
-        if frame_counter % frame_skip == 0:
-            frame_resized = cv2.resize(frame, (320, 180))  
+        frame_resized = cv2.resize(frame, (320, 150))  
 
-            frame_resized = frame_resized.astype('uint8')
+        frame_resized = frame_resized.astype('uint8')
 
-            input_tensor = tf.convert_to_tensor(frame_resized)
+        input_tensor = tf.convert_to_tensor(frame_resized)
 
-            input_tensor = input_tensor[tf.newaxis, ...]
+        input_tensor = input_tensor[tf.newaxis, ...]
 
-            output_dict = model(input_tensor)
+        output_dict = model(input_tensor)
 
-     
-            detection_boxes = output_dict['detection_boxes']
-            detection_classes = output_dict['detection_classes']
-            detection_scores = output_dict['detection_scores']
+        detection_boxes = output_dict['detection_boxes']
+        detection_classes = output_dict['detection_classes']
+        detection_scores = output_dict['detection_scores']
 
-            for i in range(detection_boxes.shape[1]):
-                if detection_scores[0, i] > 0.5:
-                    ymin, xmin, ymax, xmax = detection_boxes[0, i].numpy()
-                    class_id = int(detection_classes[0, i].numpy())
-                    score = detection_scores[0, i].numpy()
+        for i in range(detection_boxes.shape[1]):
+            if detection_scores[0, i] > 0.5:
+                ymin, xmin, ymax, xmax = detection_boxes[0, i].numpy()
+                class_id = int(detection_classes[0, i].numpy())
+                score = detection_scores[0, i].numpy()
 
-                    class_name = LABEL_MAP.get(class_id, 'Desconhecido')
+                class_name = LABEL_MAP.get(class_id, 'Desconhecido')
 
-                    (left, top, right, bottom) = (xmin * frame.shape[1], ymin * frame.shape[0],
-                                                  xmax * frame.shape[1], ymax * frame.shape[0])
-                    cv2.rectangle(frame, (int(left), int(top)), (int(right), int(bottom)), (0, 255, 0), 2)
-                    cv2.putText(frame, f"{class_name} ({score:.2f})", (int(left), int(top)-10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                (left, top, right, bottom) = (xmin * frame.shape[1], ymin * frame.shape[0],
+                                              xmax * frame.shape[1], ymax * frame.shape[0])
+                cv2.rectangle(frame, (int(left), int(top)), (int(right), int(bottom)), (0, 255, 0), 2)
+                cv2.putText(frame, f"{class_name} ({score:.2f})", (int(left), int(top)-10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-    
-            out.write(frame)
+        cv2.imshow('Detecção de Objetos', frame)
 
-        frame_counter += 1
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
     cap.release()
-    out.release()
     cv2.destroyAllWindows()
 
-
-video_path = r'C:\visao-computacional\visao-computacional\visao-trab\gato2.mp4'
-
+video_path = r'C:\visao-computacional\visao-computacional\visao-trab\gato.mp4'
 
 run_inference_for_video(model, video_path)
