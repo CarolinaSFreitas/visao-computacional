@@ -5,6 +5,8 @@ Projeto criado para a disciplina **Fundamentos de Inteligência Artificial (FIA)
 
 **O CatVision utiliza o OpenCV para processamento de imagens e TensorFlow para inferência. Ele implementa uma detecção baseada em características de gatos, demonstrando conceitos de Visão Computacional aplicados a um cenário real.**
 
+![CatVision](image.png)
+
 ## 👩‍🎓 **Discentes:**  
 - Carolina Freitas  
 - Júlia Hallal  
@@ -30,7 +32,7 @@ Projeto criado para a disciplina **Fundamentos de Inteligência Artificial (FIA)
    .\env-visao\Scripts\activate
    ```
 
-## 📦 Instalação de Dependências
+## 📥 Instalação de Dependências
 Certifique-se de que seu ambiente virtual esteja ativado. Instale as dependências listadas no arquivo `requirements.txt`:
 
 ```bash
@@ -41,10 +43,8 @@ pip install -r requirements.txt
 ```text
 numpy==2.0.0
 opencv-python==4.10.0.84
+tensorflow==2.18.0
 ```
-
-# 📥 Instalar Tensorflow e OpenCV
-``pip install tensorflow``
 
 # 🚀 Rodar o Script
 ``python cat_vision.py``
