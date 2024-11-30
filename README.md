@@ -1,4 +1,4 @@
-<img align="right" src="image.png" width="380">
+<img align="right" src="image.png" width="300">
   
 # 🐱 Projeto CatVision  
 Projeto criado para a disciplina **Fundamentos de Inteligência Artificial (FIA)** - Graduação. **Professor:** Pablo De Chiaro
@@ -31,6 +31,10 @@ Projeto criado para a disciplina **Fundamentos de Inteligência Artificial (FIA)
    ```bash
    .\env-visao\Scripts\activate
    ```
+
+
+<img align="right" src="image2.png" width="250">
+
 
 ## 📥 Instalação de Dependências
 Certifique-se de que seu ambiente virtual esteja ativado. Instale as dependências listadas no arquivo `requirements.txt`:
