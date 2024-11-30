@@ -47,7 +47,9 @@ tensorflow==2.18.0
 ```
 
 # 🚀 Rodar o Script
-``python cat_vision.py``
+```bash
+python cat_vision.py
+````
 
 ## Desativação do Ambiente Virtual
 ```bash
